@@ -33,9 +33,21 @@ def get_old_news():
             news_text += '<a href="%s">%s %s</a>\n' % (full, name, century_ago)
     return news_text
 
+def get_unread_reminders():
+    print("getting unread reminders")
+    subjects = email_helper.filter_unread("subject", "REMINDER:", "subject")
+    subjects = [s[len("REMINDER: "):].strip() for s in subjects]
+    if len(subjects) > 0:
+        reminder_html = "<h1>Reminders:</h1><ul>"
+        for s in subjects:
+            reminder_html += "<li>%s</li>" % s
+        reminder_html += "</ul>\n"
+        return reminder_html
+    return ""
+
 def format_email():
     print("forming email")
-    return '%s%s' % (get_old_news(), get_weather())
+    return '%s%s%s' % (get_unread_reminders(), get_old_news(), get_weather())
 
 def send_update_email():
     frm = config["email"]["user"]
