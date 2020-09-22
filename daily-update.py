@@ -30,7 +30,7 @@ def get_old_news():
         full_url = urls[i] % century_ago
         name = names[i]
         if requests.get(full_url).status_code != 404:
-            news_text += '<a href="%s">%s %s</a>\n' % (full, name, century_ago)
+            news_text += '<a href="%s">%s %s</a>\n' % (full_url, name, century_ago)
     return news_text
 
 def get_unread_reminders():
