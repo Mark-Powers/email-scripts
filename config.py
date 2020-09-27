@@ -1,7 +1,7 @@
 import os
 from configparser import ConfigParser
 
-config_path = "/home/mark/email-scripts/config.ini"
+config_path = "/home/mark/projects/email-scripts/config.ini"
 
 config = ConfigParser()
 if os.path.isfile(config_path):
