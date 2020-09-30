@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from config import config
 
 def get_on_this_day():
-    return "<h1>On this day</h1>%s%s%s%s" % (get_old_news(), get_calvin_and_hobbes(), get_today_wikipedia(), get_today_wikiquote())
+    return "<h1>On this day</h1><ul><li>%s</li><li>%s</li><li>%s</li><li>%s</li></ul>%s" % (get_old_news(), get_peanuts(), get_calvin_and_hobbes(), get_today_wikipedia(), get_today_wikiquote())
 
 def get_old_news():
     print("getting old news")
@@ -48,4 +48,13 @@ def get_calvin_and_hobbes():
         return '<div><a href="%s">Calvin and Hobbes</a></div>' % (comic_src)
     else:
         return ""
+
+def get_peanuts():
+    print("getting peanuts")
+    comic_date = date.today().strftime("%Y/%m/%d")
+    full_url = "https://www.gocomics.com/peanuts/%s" % comic_date
+    r = requests.get(full_url)
+    soup = BeautifulSoup(r.text, features="lxml")
+    comic_src = soup.select(".item-comic-image")[0].img["src"]
+    return '<div><a href="%s">Peanuts</a></div>' % (comic_src)
 
