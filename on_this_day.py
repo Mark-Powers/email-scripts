@@ -5,8 +5,20 @@ from bs4 import BeautifulSoup
 
 from config import config
 
+def check_error(func, name):
+    try:
+        return func()
+    except:
+        return "Error getting %s" % name
+
 def get_on_this_day():
-    return "<h1>On this day</h1><ul><li>%s</li><li>%s</li><li>%s</li><li>%s</li></ul>%s" % (get_old_news(), get_peanuts(), get_calvin_and_hobbes(), get_today_wikipedia(), get_today_wikiquote())
+    old_news = check_error(get_old_news, "old news")
+    peanuts = check_error(get_peanuts, "peanuts")
+    calvin_and_hobbes = check_error(get_calvin_and_hobbes, "calvin and hobbes")
+    wikipedia = check_error(get_today_wikipedia, "wikipedia")
+    wikiquote = check_error(get_today_wikiquote, "wikiquote")
+
+    return "<h1>On this day</h1><ul><li>%s</li><li>%s</li><li>%s</li><li>%s</li></ul>%s" % (old_news, peanuts, calvin_and_hobbes, wikipedia, wikiquote)
 
 def get_old_news():
     print("getting old news")
