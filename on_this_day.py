@@ -17,8 +17,9 @@ def get_on_this_day():
     calvin_and_hobbes = check_error(get_calvin_and_hobbes, "calvin and hobbes")
     wikipedia = check_error(get_today_wikipedia, "wikipedia")
     wikiquote = check_error(get_today_wikiquote, "wikiquote")
+    thoreau = check_error(get_thoreau, "thoreau")
 
-    return "<h1>On this day</h1><ul><li>%s</li><li>%s</li><li>%s</li><li>%s</li></ul>%s" % (old_news, peanuts, calvin_and_hobbes, wikipedia, wikiquote)
+    return "<h1>On this day</h1><ul><li>%s</li><li>%s</li><li>%s</li><li>%s</li></ul><div>%s</div><div><pre>%s</pre></div>" % (old_news, peanuts, calvin_and_hobbes, wikipedia, wikiquote, thoreau)
 
 def get_old_news():
     print("getting old news")
@@ -70,3 +71,46 @@ def get_peanuts():
     comic_src = soup.select(".item-comic-image")[0].img["src"]
     return '<div><a href="%s">Peanuts</a></div>' % (comic_src)
 
+def get_thoreau():
+    print("getting thoreau")
+    year_int = int(date.today().strftime("%Y")) - 183
+    year = str(year_int)
+    year_stop = str(year_int+1)
+    month_day1 = date.today().strftime("_%b %d._")
+    month_day2 = date.today().strftime("_%b. %d._")
+    with open("journal1.txt") as f:
+        lines = f.readlines()
+
+        # Find lines that the year lies on
+        i= 0
+        year_start_idx = -1
+        for i in range(len(lines)):
+            if lines[i].startswith(year):
+                year_start_idx = i+1
+                break
+        year_stop_idx = -1
+        for i in range(year_start_idx, len(lines)):
+            if lines[i].startswith(year_stop):
+                year_stop_idx = i - 2
+                break
+        entry_start_idx = -1
+
+        # Find the lines inside the year that the date lies on
+        i = year_start_idx
+        while i < year_stop_idx:
+            if lines[i].startswith(month_day1) or lines[i].startswith(month_day2):
+                entry_start_idx = i - 2
+                i += 1
+                break
+            i += 1
+        entry_end_idx = -1
+        while i < year_stop_idx:
+            if lines[i].startswith("_"):
+                entry_end_idx = i - 2
+                break
+            i += 1
+
+        # If found date, join the strings
+        if entry_start_idx != -1 and entry_end_idx != -1:
+            return "".join(lines[entry_start_idx:entry_end_idx])
+        return "No Thoreau entry on " + month_day1 + year
