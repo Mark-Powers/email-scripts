@@ -51,6 +51,9 @@ def get_body(msg):
 def get_from(msg):
     return msg.get("From")
 
+def get_date(msg):
+    return msg.get("Date")
+
 def get_content_type(msg):
     return msg.get_content_type()
 
@@ -58,21 +61,25 @@ def set_unseen(imap, idx):
     imap.store(idx, '-FLAGS', '\\SEEN')
 
 def get_what(msg, what):
-    if what == "subject":
-        return get_subject(msg)
-    elif what == "body":
-        return get_body(msg)
-    elif what == "from":
-        return get_from(msg)
-    elif what == "content_type":
-        return get_content_type
+    ret = {}
+    if "subject" in what:
+        ret["subject"] = get_subject(msg)
+    if "body" in what:
+        ret["body"] = get_body(msg)
+    if "from" in what:
+        ret["from"] = get_from(msg)
+    if "content_type" in what:
+        ret["content_type"] = get_content_type(msg)
+    if "date" in what:
+        ret["date"] = get_date(msg)
+    return ret
 
 def parse(imap, index, check_what, criteria, return_what):
     res, msg = imap.fetch(index, "(RFC822)")
     for response in msg:
         if isinstance(response, tuple):
             msg = email.message_from_bytes(response[1])
-            if criteria in get_what(msg, check_what):
+            if criteria in get_what(msg, check_what)[check_what]:
                 return get_what(msg, return_what)
 
 def filter_unread(check_what, criteria, return_what):
