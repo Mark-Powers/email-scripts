@@ -76,9 +76,10 @@ def get_thoreau():
     year_int = int(date.today().strftime("%Y")) - 183
     year = str(year_int)
     year_stop = str(year_int+1)
-    month_day1 = date.today().strftime("_%b %d._")
-    month_day2 = date.today().strftime("_%b. %d._")
-    with open("journal1.txt") as f:
+    month_day1 = date.today().strftime("_%b %-d._")
+    month_day2 = date.today().strftime("_%b. %-d._")
+    filename = config["thoreau"]["journal1"]
+    with open(filename) as f:
         lines = f.readlines()
 
         # Find lines that the year lies on
