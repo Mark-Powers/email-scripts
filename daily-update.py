@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 
-import smtplib
-import sys
-import time
 import requests
 
 from datetime import date
@@ -23,7 +20,7 @@ def get_weather():
 def get_unread_reminders():
     print("getting unread reminders")
     subjects = email_helper.filter_unread("subject", "REMINDER:", "subject")
-    subjects = [s[len("REMINDER: "):].strip() for s in subjects]
+    subjects = [s["subject"][len("REMINDER: "):].strip() for s in subjects]
     if len(subjects) > 0:
         reminder_html = "<h1>Reminders:</h1><ul>"
         for s in subjects:
